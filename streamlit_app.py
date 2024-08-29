@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
 
 st.title('IPL Win Probability Predictor')
 
@@ -89,3 +91,45 @@ trf = ColumnTransformer(
     ],
     remainder='passthrough'
 )
+
+pipe = Pipeline(steps=[
+    ('step1',trf),
+    ('step2',LogisticRegression(solver='liblinear'))
+])
+
+pipe.fit(X_train,y_train)
+
+y_pred = pipe.predict(X_test)
+
+def match_summary(row):
+    print("Batting Team-" + row['batting_team'] + " | Bowling Team-" + row['bowling_team'] + " | Target- " + str(row['total_runs_x']))
+
+def match_progression(x_df,match_id,pipe):
+    match = x_df[x_df['match_id'] == match_id]
+    match = match[(match['ball'] == 6)]
+    temp_df = match[['batting_team','bowling_team','city','runs_left','balls_left','wickets','total_runs_x','crr','rrr']].dropna()
+    temp_df = temp_df[temp_df['balls_left'] != 0]
+    result = pipe.predict_proba(temp_df)
+    temp_df['lose'] = np.round(result.T[0]*100,1)
+    temp_df['win'] = np.round(result.T[1]*100,1)
+    temp_df['end_of_over'] = range(1,temp_df.shape[0]+1)
+    
+    target = temp_df['total_runs_x'].values[0]
+    runs = list(temp_df['runs_left'].values)
+    new_runs = runs[:]
+    runs.insert(0,target)
+    temp_df['runs_after_over'] = np.array(runs)[:-1] - np.array(new_runs)
+    wickets = list(temp_df['wickets'].values)
+    new_wickets = wickets[:]
+    new_wickets.insert(0,10)
+    wickets.append(0)
+    w = np.array(wickets)
+    nw = np.array(new_wickets)
+    temp_df['wickets_in_over'] = (nw - w)[0:temp_df.shape[0]]
+    
+    print("Target-",target)
+    temp_df = temp_df[['end_of_over','runs_after_over','wickets_in_over','lose','win']]
+    return temp_df,target
+
+temp_df,target = match_progression(delivery_df,74,pipe)
+temp_df
