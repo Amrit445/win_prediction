@@ -9,7 +9,7 @@ from sklearn.pipeline import Pipeline
 
 st.title('IPL Win Probability Predictor')
 
-match = pd.read_csv('https://raw.githubusercontent.com/Amrit445/ipl_win_predictor/master/matches.csv')
+match = pd.read_csv('https://raw.githubusercontent.com/Amrit445/win_prediction/master/matches.csv')
 delivery = pd.read_csv('https://raw.githubusercontent.com/Amrit445/win_prediction/master/deliveries.csv')
 
 total_score_df = delivery.groupby(['match_id','inning']).sum()['total_runs'].reset_index()
