@@ -83,4 +83,7 @@ x=final_df.iloc[:,:-1]
 y=final_df.iloc[:,-1]
 x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=1)
 
-
+trf = ColumnTransformer([
+    ('trf',OneHotEncoder(sparse=False,drop='first'),['batting_team','bowling_team','city'])
+]
+,remainder='passthrough')
