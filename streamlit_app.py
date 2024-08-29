@@ -140,3 +140,8 @@ cities = ['Hyderabad', 'Bangalore', 'Mumbai', 'Indore', 'Kolkata', 'Delhi',
 
 batting_team = st.selectbox('Select the batting team',sorted(teams))
 
+bowling_team = st.selectbox('Select the bowling team',sorted(teams))
+
+selected_city = st.selectbox('Select host city',sorted(cities))
+
+target = st.number_input('Target', min_value=0, step=1, format="%d")
