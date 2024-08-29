@@ -131,5 +131,12 @@ def match_progression(x_df,match_id,pipe):
     temp_df = temp_df[['end_of_over','runs_after_over','wickets_in_over','lose','win']]
     return temp_df,target
 
-temp_df,target = match_progression(delivery_df,74,pipe)
-temp_df
+cities = ['Hyderabad', 'Bangalore', 'Mumbai', 'Indore', 'Kolkata', 'Delhi',
+       'Chandigarh', 'Jaipur', 'Chennai', 'Cape Town', 'Port Elizabeth',
+       'Durban', 'Centurion', 'East London', 'Johannesburg', 'Kimberley',
+       'Bloemfontein', 'Ahmedabad', 'Cuttack', 'Nagpur', 'Dharamsala',
+       'Visakhapatnam', 'Pune', 'Raipur', 'Ranchi', 'Abu Dhabi',
+       'Sharjah', 'Mohali', 'Bengaluru']
+
+batting_team = st.selectbox('Select the batting team',sorted(teams))
+
